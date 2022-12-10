@@ -1,13 +1,55 @@
-/**
- * Program that use the NeoPixel Extension to display a rainbow of colours over 12 LEDs
- * 
- * NeoPixel hardware required
- */
-// Initialise the NeoPixel strip with 12 LEDs
-let strip = neopixel.create(DigitalPin.P0, 300, NeoPixelMode.RGB)
-strip.showRainbow(1, 360)
+let On = 0
+let Setting = 0
+let strip: neopixel.Strip = null
+let SettingsMax = 0
+SettingsMax = 4
+strip = neopixel.create(DigitalPin.P0, 240, NeoPixelMode.RGB)
+basic.showIcon(IconNames.Happy)
+basic.pause(250)
+basic.clearScreen()
+// strip.showRainbow(1, 360)
 basic.forever(function () {
-    strip.rotate(5)
-    strip.show()
-    basic.pause(100)
+    input.onButtonPressed(Button.A, function () {
+        if (Setting > 1) {
+            Setting += -1
+            basic.showNumber(Setting)
+        } else {
+            basic.showString("X")
+        }
+    })
+    input.onButtonPressed(Button.B, function () {
+        if (Setting < SettingsMax) {
+            Setting += 1
+            basic.showNumber(Setting)
+            basic.pause(250)
+            basic.clearScreen()
+        } else {
+            basic.showString("X")
+            basic.pause(250)
+            basic.clearScreen()
+        }
+    })
+    input.onButtonPressed(Button.AB, function () {
+        if (Setting == 1) {
+            strip.showColor(neopixel.rgb(239, 235, 50))
+            strip.show()
+        }
+        if (Setting == 2) {
+            strip.showColor(neopixel.colors(NeoPixelColors.Red))
+            strip.show()
+        }
+        if (Setting == 3) {
+            strip.showColor(neopixel.colors(NeoPixelColors.Green))
+            strip.show()
+        }
+        if (Setting == 4) {
+            strip.showRainbow(1, 360)
+            basic.forever(function () {
+                strip.rotate(10)
+                strip.show()
+                basic.pause(100)
+            })
+
+        }
+    })
 })
